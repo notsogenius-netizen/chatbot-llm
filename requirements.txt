@@ -1,0 +1,9 @@
+langchain
+langchain-core
+langchain_community
+pypdf
+langchain_chroma
+python-multipart
+fastapi
+uvicorn
+streamlit
