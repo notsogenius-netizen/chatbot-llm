@@ -60,3 +60,14 @@ def create_document_store():
     except Exception as e:
         logging.error(f"Error creating document_store table: {str(e)}")
 
+def insert_document(filename):
+    connection = create_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute('INSERT INTO document_store (filename) VALUES (?)', (filename,))
+        file_id = cursor.lastrowid
+        connection.commit()
+        connection.close()
+        return file_id
+    except Exception as e:
+        logging.error(f"Error inserting into document_store: {str(e)}")
