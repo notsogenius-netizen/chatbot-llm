@@ -29,7 +29,7 @@ def query(query_input: QueryInput):
 
     insert_app_logs(session_id, query_input.query, answer)
     logging.info(f"Session ID: {session_id}, Response: {answer}")
-    return QueryResponse(response= answer, sesssion_id= session_id)
+    return QueryResponse(response= answer, session_id= session_id)
 
 @app.post("/upload")
 def upload_and_index_document(file: UploadFile = File(...)):

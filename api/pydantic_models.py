@@ -8,7 +8,7 @@ class QueryInput(BaseModel):
 
 class QueryResponse(BaseModel):
     response: str
-    sesssion_id: str
+    session_id: str
 
 class DocumentList(BaseModel):
     id: int
