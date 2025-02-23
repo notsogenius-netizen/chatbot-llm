@@ -33,7 +33,7 @@ def query(query_input: QueryInput):
 
 @app.post("/upload")
 def upload_and_index_document(file: UploadFile = File(...)):
-    allowed_extensions = ['.pdf', '.docx', '.html']
+    allowed_extensions = ['.pdf']
     file_extension = os.path.splitext(file.filename)[1].lower()
     
     if file_extension not in allowed_extensions:
@@ -57,3 +57,20 @@ def upload_and_index_document(file: UploadFile = File(...)):
     finally:
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
+
+@app.get("/list-documents")
+def get_documents():
+    return get_document_list()
+
+@app.delete("/delete-document/{file_id}")
+def delete_document_by_id(file_id: str):
+    chroma_success = delete_doc_from_chroma(file_id)
+
+    if chroma_success:
+        db_success = delete_document(file_id)
+        if db_success:
+            return {"message": f"Document with ID {file_id} has been successfully deleted."}
+        else:
+            return {"message": f"Failed to delete document with ID {file_id} from the database."}
+    else:
+        return {"message": f"Failed to delete document with ID {file_id} from the Chroma database."}
