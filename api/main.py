@@ -58,7 +58,7 @@ def upload_and_index_document(file: UploadFile = File(...)):
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
 
-@app.get("/list-documents", response_model= DocumentList)
+@app.get("/get-documents", response_model= list[DocumentList])
 def get_documents():
     return get_document_list()
 
