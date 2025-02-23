@@ -1,5 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic_models import QueryInput, QueryResponse
+from db_utils import get_chat_history
+from llm import get_rag_chain
 import logging
 import uuid
 
@@ -15,4 +17,5 @@ def query(query_input: QueryInput):
     if not session_id:
         session_id = str(uuid.uuid4())
     
-    
+    chat_history = get_chat_history(session_id)
+    rag_chain = get_rag_chain()
