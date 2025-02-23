@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from pydantic_models import QueryInput, QueryResponse
+from pydantic_models import QueryInput, QueryResponse, DocumentList
 from db_utils import get_chat_history
 from llm import get_rag_chain
 from db_utils import insert_app_logs, insert_document, delete_document, get_document_list
@@ -58,7 +58,7 @@ def upload_and_index_document(file: UploadFile = File(...)):
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
 
-@app.get("/list-documents")
+@app.get("/list-documents", response_model= DocumentList)
 def get_documents():
     return get_document_list()
 

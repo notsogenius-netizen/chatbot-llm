@@ -9,3 +9,8 @@ class QueryInput(BaseModel):
 class QueryResponse(BaseModel):
     response: str
     sesssion_id: str
+
+class DocumentList(BaseModel):
+    id: int
+    filename: str
+    upload_timestamp: datetime
