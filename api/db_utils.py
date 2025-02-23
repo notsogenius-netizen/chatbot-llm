@@ -71,3 +71,25 @@ def insert_document(filename):
         return file_id
     except Exception as e:
         logging.error(f"Error inserting into document_store: {str(e)}")
+
+def delete_document(file_id):
+    connection = create_connection()
+    try:
+        connection.execute('DELETE FROM document_store WHERE id = ?', (file_id,))
+        connection.commit()
+        connection.close()
+        return True
+    except Exception as e:
+        logging.error(f"Error deleting from document_store: {str(e)}")
+        return False
+
+def get_document_list():
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT id, filename, upload_timestamp FROM document_store ORDER BY upload_timestamp DESC')
+    documents = cursor.fetchall()
+    connection.close()
+    return [dict(doc) for doc in documents]
+
+create_app_logs()
+create_document_store()
