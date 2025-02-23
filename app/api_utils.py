@@ -25,3 +25,19 @@ def list_documents():
     except Exception as e:
         st.error(f"An error occurred while fetching the document list: {str(e)}")
         return []
+    
+def delete_document(file_id):
+    headers = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    try:
+        response = requests.delete("http://localhost:8000/delete-document/{file_id}", headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            st.error(f"Failed to delete document. Error: {response.status_code} - {response.text}")
+            return None
+    except Exception as e:
+        st.error(f"An error occurred while deleting the document: {str(e)}")
+        return None
