@@ -15,7 +15,7 @@ def create_connection():
 def create_app_logs():
     connection = create_connection()
     try:
-        connection.execute('''CREATE TABLE IF NOT EXISTS application_logs
+        connection.execute('''CREATE TABLE IF NOT EXISTS app_logs
                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
                             session_id TEXT,
                             query TEXT,
@@ -24,3 +24,30 @@ def create_app_logs():
         connection.close()
     except Exception as e:
         print(f"Error creating application_logs table: {str(e)}")
+
+def insert_app_logs(session_id, query, response):
+    connection = create_connection()
+    try:
+        connection.execute('''INSERT INTO app_logs (session_id, query, response)
+                            VALUES (?, ?, ?)''', (session_id, query, response))
+        connection.commit()
+        connection.close()
+    except Exception as e:
+        print(f"Error inserting into application_logs: {str(e)}")
+
+def get_chat_history(session_id):
+    conn = create_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute('SELECT query, response FROM app_logs WHERE session_id = ? ORDER BY created_at', (session_id,))
+        messages = []
+        for row in cursor.fetchall():
+            messages.extend([
+                {"role": "human", "content": row['query']},
+                {"role": "ai", "content": row['response']}
+            ])
+        conn.close()
+        return messages
+    except Exception as e:
+        print(f"Error getting chat history: {str(e)}")
+        return []
