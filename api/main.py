@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic_models import QueryInput, QueryResponse
 from db_utils import get_chat_history
 from llm import get_rag_chain
+from db_utils import insert_app_logs
 import logging
 import uuid
 
@@ -19,3 +20,11 @@ def query(query_input: QueryInput):
     
     chat_history = get_chat_history(session_id)
     rag_chain = get_rag_chain()
+    answer = rag_chain.invoke({
+        "input": query_input.question,
+        "chat_history": chat_history
+    })['answer']
+
+    insert_app_logs(session_id, query_input.query, answer)
+    logging.info(f"Session ID: {session_id}, Response: {answer}")
+    return QueryResponse(response= answer, sesssion_id= session_id)
